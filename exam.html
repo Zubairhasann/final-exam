@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weather App</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f0f0;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      #weather-container {
+        text-align: center;
+        padding: 20px;
+        border-radius: 10px;
+        background-color: #fff;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      #search-input {
+        padding: 8px;
+        margin-bottom: 10px;
+        width: 200px;
+      }
+
+      #weather-icon {
+        width: 100px;
+        height: 100px;
+      }
+
+      #weather-description {
+        margin-top: 10px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="weather-container">
+      <input type="text" id="search-input" placeholder="Enter country" />
+      <button onclick="searchWeather()">Search</button>
+      <div id="weather-info">
+        <img id="weather-icon" src="" alt="Weather Icon" />
+        <div id="weather-description"></div>
+        <div id="temperature"></div>
+      </div>
+    </div>
+
+    <script>
+      const apiKey = "YOUR_OPENWEATHERMAP_API_KEY";
+
+      function searchWeather() {
+        const searchInput = document.getElementById("search-input").value;
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${searchInput}&appid=${apiKey}`;
+
+        fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            const weatherIcon = document.getElementById("weather-icon");
+            const weatherDescription = document.getElementById(
+              "weather-description"
+            );
+            const temperature = document.getElementById("temperature");
+
+            // Update weather information
+            weatherIcon.src = `http://openweathermap.org/img/w/${data.weather[0].icon}.png`;
+            weatherDescription.textContent = data.weather[0].description;
+            temperature.textContent = `${(data.main.temp - 273.15).toFixed(
+              2
+            )}°C`;
+          })
+          .catch((error) =>
+            console.error("Error fetching weather data:", error)
+          );
+      }
+    </script>
+  </body>
+</html>
