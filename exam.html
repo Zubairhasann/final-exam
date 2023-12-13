@@ -3,8 +3,70 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="styles.css" />
     <title>Weather Map</title>
+    <style>
+      body {
+        font-family: "Arial", sans-serif;
+        background-color: #f4f4f4;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      #search-container {
+        margin: 20px;
+      }
+
+      #weather-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 20px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      }
+
+      #weather-icon {
+        width: 100px;
+        height: 100px;
+        margin-bottom: 10px;
+      }
+
+      #temperature {
+        font-size: 24px;
+        font-weight: bold;
+      }
+
+      #weather-description {
+        margin-top: 10px;
+      }
+
+      .weather-image {
+        width: 100px;
+        height: 100px;
+      }
+
+      .rain {
+        content: url("rain.png"); /* Replace with your rain image */
+      }
+
+      .cloud {
+        content: url("cloud.png"); /* Replace with your cloud image */
+      }
+
+      .sunny {
+        content: url("sunny.png"); /* Replace with your sunny image */
+      }
+
+      .storm {
+        content: url("storm.png"); /* Replace with your storm image */
+      }
+    </style>
   </head>
   <body>
     <div id="search-container">
@@ -15,11 +77,53 @@
 
     <div id="weather-container">
       <h2 id="country-name"></h2>
-      <img id="weather-icon" class="weather-image" alt="Weather Icon" />
+      <img id="weather-icon" src="" alt="Weather Icon" />
       <p id="temperature"></p>
       <p id="weather-description"></p>
     </div>
 
-    <script src="script.js"></script>
+    <script>
+      function searchWeather() {
+        const apiKey = "776780843df857bd08a4412c21de2b38"; // Replace with your OpenWeatherMap API key
+        const countryInput = document.getElementById("country-input").value;
+        const apiUrl = `https://api.openweathermap.org/data/2.5/weather?q=${countryInput}&appid=${apiKey}`;
+
+        fetch(apiUrl)
+          .then((response) => response.json())
+          .then((data) => {
+            const countryName = data.name;
+            const temperature = Math.round(data.main.temp - 273.15); // Convert temperature to Celsius
+            const weatherDescription = data.weather[0].description;
+            const weatherIcon = data.weather[0].icon;
+
+            document.getElementById("country-name").textContent = countryName;
+            document.getElementById(
+              "temperature"
+            ).textContent = `${temperature}°C`;
+            document.getElementById("weather-description").textContent =
+              weatherDescription;
+            document.getElementById(
+              "weather-icon"
+            ).src = `https://openweathermap.org/img/wn/${weatherIcon}.png`;
+
+            // Update weather image based on weather description
+            const weatherImage = document.querySelector(".weather-image");
+            weatherImage.className = "weather-image";
+
+            if (weatherDescription.includes("rain")) {
+              weatherImage.classList.add("rain");
+            } else if (weatherDescription.includes("cloud")) {
+              weatherImage.classList.add("cloud");
+            } else if (weatherDescription.includes("clear")) {
+              weatherImage.classList.add("sunny");
+            } else if (weatherDescription.includes("storm")) {
+              weatherImage.classList.add("storm");
+            }
+          })
+          .catch((error) =>
+            console.error("Error fetching weather data:", error)
+          );
+      }
+    </script>
   </body>
 </html>

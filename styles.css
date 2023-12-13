@@ -9,6 +9,11 @@ body {
   align-items: center;
 }
 
+.container {
+  width: 80%;
+  margin: 20px auto;
+}
+
 #search-container {
   margin: 20px;
 }
@@ -42,6 +47,8 @@ body {
 .weather-image {
   width: 100px;
   height: 100px;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .rain {
